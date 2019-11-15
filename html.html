@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <base target="_top">
+  <meta name="viewport" content="width-device, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <style>
+    .center {
+      margin: auto;
+      width: 60%;
+      padding: 10px;
+    }    
+  </style>
+</head>
+
+<body>
+
+  <div class="valign-wrapper; center-align">
+    <h5 id="title" style="text-align: center;"><img src="https://drive.google.com/uc?id=17kkykFtaKGRSDQrO6H5Aw72q4zNguPNx"
+        alt="Google Classroom Icon" style="width: 22px;height: 22px;">
+      These are your outstanding Google Classroom assignments</h5>
+  </div>
+  <div id="NoAssignmentsDiv" style="display: none;">
+  </div>
+  <div id="LoadingDiv">
+    <div style="text-align: center;">Loading... please wait. The more outstanding assignments you have the
+      longer this will take!</div>
+    <div class="center">
+      <div class="preloader-wrapper small active">
+        <div class="spinner-layer spinner-blue">
+          <div class="circle-clipper left">
+            <div class="circle"></div>
+          </div>
+          <div class="gap-patch">
+            <div class="circle"></div>
+          </div>
+          <div class="circle-clipper right">
+            <div class="circle"></div>
+          </div>
+        </div>
+
+        <div class="spinner-layer spinner-red">
+          <div class="circle-clipper left">
+            <div class="circle"></div>
+          </div>
+          <div class="gap-patch">
+            <div class="circle"></div>
+          </div>
+          <div class="circle-clipper right">
+            <div class="circle"></div>
+          </div>
+        </div>
+
+        <div class="spinner-layer spinner-yellow">
+          <div class="circle-clipper left">
+            <div class="circle"></div>
+          </div>
+          <div class="gap-patch">
+            <div class="circle"></div>
+          </div>
+          <div class="circle-clipper right">
+            <div class="circle"></div>
+          </div>
+        </div>
+
+        <div class="spinner-layer spinner-green">
+          <div class="circle-clipper left">
+            <div class="circle"></div>
+          </div>
+          <div class="gap-patch">
+            <div class="circle"></div>
+          </div>
+          <div class="circle-clipper right">
+            <div class="circle"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+  <table id="Table" class="centered striped"></table>
+
+</body>
+
+</html>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    google.script.run.withSuccessHandler(setData).getCourses()
+  })
+
+  function setData(data) {
+    document.getElementById("LoadingDiv").style.display = "none"
+    if (data.length === 0) {
+      document.getElementById("title").innerHTML = '<img src="https://drive.google.com/uc?id=17kkykFtaKGRSDQrO6H5Aw72q4zNguPNx" alt="Google Classroom Icon" style="width: 22px;height: 22px;">You have no classroom assignments to complete!'
+      document.getElementById("NoAssignmentsDiv").style.display = "block"
+      return
+    }
+    var table = document.getElementById("Table")
+    var headingsArray = ["Type", "Classroom", "Assignment", "Link", "Due date"]
+    var headings = document.createElement("thead")
+    var row = document.createElement("tr")
+    headingsArray.forEach(function (heading) {
+      var col = document.createElement('th');
+      col.innerText = heading;
+      row.appendChild(col)
+    });
+    headings.appendChild(row)
+    table.appendChild(headings)
+    var contents = document.createElement("tbody")
+    data.forEach(function (assignment) {
+      var row = document.createElement("tr")
+      for (var i = 0; i < assignment.length; i++) {
+        if (i === 0) {
+          if (assignment[i] === "ASSIGNMENT") {
+            var col = document.createElement("td")
+            col.innerHTML = '<i class="material-icons">assignment</i>'
+            row.appendChild(col)
+          } else {
+            var col = document.createElement("td")
+            col.innerHTML =
+              '<img src="https://drive.google.com/uc?id=1Y9NX6rLp0J2Apd_asRamY_hGRUujVpGe" style="width: 22px; height: 22px;">'
+            row.appendChild(col)
+          }
+
+        } else if (i === 3) {
+          var col = document.createElement('td');
+          var link = document.createElement('a');
+          link.href = assignment[i]
+          link.target = "_blank"
+          link.innerText = "View assignment";
+          col.appendChild(link)
+          row.appendChild(col)
+        } else {
+          var col = document.createElement("td")
+          col.innerText = assignment[i]
+          row.appendChild(col)
+        }
+      }
+      contents.appendChild(row)
+    })
+    table.appendChild(contents)
+  }
+</script>
