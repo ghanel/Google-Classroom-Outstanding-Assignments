@@ -84,7 +84,7 @@ function getCourseWork(courseArray, email) {
           var submission = Classroom.Courses.CourseWork.StudentSubmissions.list(id, work.id, {
             userId: email
           })
-          if (submission.studentSubmissions[0].state != "TURNED_IN" || submission.studentSubmissions[0].state != "RETURNED") {
+          if (submission.studentSubmissions[0].state != "TURNED_IN" && submission.studentSubmissions[0].state != "RETURNED") {
             workArray.push([type, name, title, link, dueDate]);
           }
         }
